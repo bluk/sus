@@ -25,14 +25,15 @@ jobs:
           toolchain: stable
       - name: Install CLI
         run: cargo install --path sus_cli
-      - name: Get Hosts Files
-        run: curl https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts -o hosts
-      - run: sus < hosts > sus_site/static/hosts.json 
+      - run: mkdir -p build/ls_rules/
+      - run: curl https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts -o hosts
+      - run: sus --name "Steven Black's Unified hosts = (adware + malware)" --description "$(date -u)" < hosts > build/ls_rules/steven_black_unified.json 
+      - run: cp -r sus_site/static/* build/
       - name: Publish
         uses: cloudflare/pages-action@v1
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: ${{ secrets.CLOUDFLARE_PROJECT_NAME }}
-          directory: sus_site/static
+          directory: build
           branch: main
