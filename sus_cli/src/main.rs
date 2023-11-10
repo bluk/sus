@@ -9,6 +9,8 @@ use ls_rules::LsRules;
 struct Args {
     #[arg(long)]
     name: Option<String>,
+    #[arg(long)]
+    description: Option<String>,
 }
 
 /// Validates a hostname.
@@ -58,6 +60,7 @@ fn main() -> io::Result<()> {
 
     let mut rules = LsRules::default();
     rules.name = args.name.as_deref();
+    rules.description = args.description.as_deref();
     rules.denied_remote_domains = Some(domains);
 
     serde_json::to_writer(&mut io::stdout(), &rules)?;
